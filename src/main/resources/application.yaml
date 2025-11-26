@@ -1,0 +1,8 @@
+server:
+  port: ${PORT:8080}
+
+spring:
+  application:
+    name: my-spring-app
+
+openai.api-key: c2stcHJvai1oWUVTNzVlV2tXci1yU1QzM3N5SFNlZmNZejRkSTBrNEZDay10eWJMbDJNODVaUjQzTnBHXzJiX2NMWXZtd2tFZXNlNHBZbi14dlQzQmxia0ZKVVZNeGNGRkx0SC1wU2RVelFkWGZCcWdVcVlKOFd0MWF5Y2w0MG9VTTFEN25WWE5aM0Y3b3FNLUFsdkFzMGdrWXdmZ0FQSzV1c0E=

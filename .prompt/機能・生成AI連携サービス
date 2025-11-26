@@ -1,0 +1,13 @@
+SpringBootでバックエンドからChatGPTに問い合わせするようなAPIを開発しております。
+問い合わせの文章テンプレートをファイルに持たせたいが、どういう風に実現してよいか教えてください。
+
+
+$body = @'
+{
+  "levelFrom":"1",
+  "levelTo":"3",
+  "skills":"VueJS,TypeScript",
+  "jobPosting":"",
+  "number":"10"
+}
+'@

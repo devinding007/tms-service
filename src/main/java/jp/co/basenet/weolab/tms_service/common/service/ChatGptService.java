@@ -1,13 +1,14 @@
 package jp.co.basenet.weolab.tms_service.common.service;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StopWatch;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import jp.co.basenet.weolab.tms_service.common.repository.PromptTemplateRepository;
 
-import java.util.HashMap;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 
@@ -33,10 +34,13 @@ public class ChatGptService {
     // }
 
     public ChatGptService(@Value("${openai.api-key}") String apiKey, PromptTemplateRepository promptRepo) {
+        byte[] bytes = Base64.getDecoder().decode(apiKey);
+        String decodedApiKey = new String(bytes, StandardCharsets.UTF_8);
+
         this.promptRepo = promptRepo;
         this.webClient = WebClient.builder()
                 .baseUrl("https://api.openai.com/v1")
-                .defaultHeader("Authorization", "Bearer " + apiKey)
+                .defaultHeader("Authorization", "Bearer " + decodedApiKey)
                 .defaultHeader("Content-Type", "application/json")
                 .build();
     }
@@ -45,6 +49,7 @@ public class ChatGptService {
         return promptRepo.render(templateName, model);
     }
 
+    @Cacheable("askChatGpt")
     public String askChatGpt(String prompt) {
         Map<String, Object> request = Map.of(
             "model", "gpt-5-nano",

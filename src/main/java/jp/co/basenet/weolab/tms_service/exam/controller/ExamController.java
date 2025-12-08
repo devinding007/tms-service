@@ -1,6 +1,5 @@
 package jp.co.basenet.weolab.tms_service.exam.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;

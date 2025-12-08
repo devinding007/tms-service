@@ -1,7 +1,6 @@
 package jp.co.basenet.weolab.tms_service.personel.dto;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ResumeAnalysis {
     @JsonProperty("一言集約") private String summary;

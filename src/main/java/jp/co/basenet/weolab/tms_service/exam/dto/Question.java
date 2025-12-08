@@ -2,7 +2,6 @@ package jp.co.basenet.weolab.tms_service.exam.dto;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;

@@ -9,6 +9,15 @@ public class ProposalAnalyseResult {
     private Integer matchRate;
     @JsonProperty("理由")
     private String reason;
+    @JsonProperty("スキル採点")
+    private SkillScore[] skills;
+
+    public SkillScore[] getSkills() {
+        return skills;
+    }
+    public void setSkills(SkillScore[] skills) {
+        this.skills = skills;
+    }
     public String getTalentId() {
         return talentId;
     }

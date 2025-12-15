@@ -5,4 +5,19 @@ spring:
   application:
     name: my-spring-app
 
-openai.api-key: c2stcHJvai1oWUVTNzVlV2tXci1yU1QzM3N5SFNlZmNZejRkSTBrNEZDay10eWJMbDJNODVaUjQzTnBHXzJiX2NMWXZtd2tFZXNlNHBZbi14dlQzQmxia0ZKVVZNeGNGRkx0SC1wU2RVelFkWGZCcWdVcVlKOFd0MWF5Y2w0MG9VTTFEN25WWE5aM0Y3b3FNLUFsdkFzMGdrWXdmZ0FQSzV1c0E=
+  datasource:
+    url: jdbc:mysql://localhost:3306/weolabtms?useSSL=false&serverTimezone=UTC
+    username: dev_user
+    password: basewodea
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+openai:
+  api-key: c2stcHJvai1oWUVTNzVlV2tXci1yU1QzM3N5SFNlZmNZejRkSTBrNEZDay10eWJMbDJNODVaUjQzTnBHXzJiX2NMWXZtd2tFZXNlNHBZbi14dlQzQmxia0ZKVVZNeGNGRkx0SC1wU2RVelFkWGZCcWdVcVlKOFd0MWF5Y2w0MG9VTTFEN25WWE5aM0Y3b3FNLUFsdkFzMGdrWXdmZ0FQSzV1c0E=

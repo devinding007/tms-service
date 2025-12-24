@@ -22,6 +22,8 @@ public class ProposalController {
 
     @PostMapping("/proposal/analyse")
     public ResponseEntity<List<ProposalAnalyseResult>> receiveTalents(@RequestBody ProposalAnalyseRequest request) {
+
+
         List<ProposalAnalyseResult> response = service.analyse(request);
         return ResponseEntity.ok(response);
     }

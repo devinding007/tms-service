@@ -19,6 +19,11 @@ public class TalentSkillScoreId implements Serializable {
         this.skillName = skillName;
     }
 
+    public String getTalentId() { return talentId; }
+    public void setTalentId(String talentId) { this.talentId = talentId; }
+    public String getSkillName() { return skillName; }
+    public void setSkillName(String skillName) { this.skillName = skillName; }
+
     // equals / hashCode は必須
     @Override
     public boolean equals(Object o) {

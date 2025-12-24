@@ -24,9 +24,11 @@ public class AnalyseProposalService {
     public List<ProposalAnalyseResult> analyse(ProposalAnalyseRequest request) {
         try {
             String inputJson = om.writeValueAsString(request);
+
             Map<String, String> model = new HashMap<String, String>();
             model.put("候補要員データ", inputJson);
             String prompt = gptService.getPrompt("candidate-matching", model);
+
             System.out.println(prompt);
             String gptResp = gptService.askChatGpt(prompt);
             System.out.println(gptResp);

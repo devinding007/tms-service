@@ -1,9 +1,11 @@
 package jp.co.basenet.weolab.tms_service.personel.dto;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class ProposalAnalyseResult {
-    @JsonProperty("人材ＩＤ")
+    @JsonProperty("人材ID")    // 主字段（半角 D）
+    @JsonAlias("人材ＩＤ")
     private String talentId;
     @JsonProperty("マッチ率")
     private Integer matchRate;

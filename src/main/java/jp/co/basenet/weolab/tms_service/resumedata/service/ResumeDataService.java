@@ -1,17 +1,21 @@
+// ファイルパス: jp.co.basenet.weolab.tms_service.resumedata.service.ResumeDataService.java
+
 package jp.co.basenet.weolab.tms_service.resumedata.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jp.co.basenet.weolab.tms_service.resumedata.dto.ResumeData;
-import jp.co.basenet.weolab.tms_service.resumedata.entity.ResumeDataEntity;
+import jp.co.basenet.weolab.tms_service.resumedata.entity.ResumeDataDoc;
 import jp.co.basenet.weolab.tms_service.resumedata.repository.ResumeDataRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+
 /**
- * 履歴書データのサービス
+ * 履歴書データのサービス（MongoDB 版）
  */
 @Slf4j
 @Service
@@ -31,15 +35,15 @@ public class ResumeDataService {
         log.info("=== 履歴書データ取得開始 ===");
         log.info("talentId: {}", talentId);
 
-        // Entity取得（英語フィールド名: talentId）
+        // Document取得（英語フィールド名: talentId）
         var entityOpt = resumeDataRepository.findById(talentId);
         if (entityOpt.isEmpty()) {
             log.warn("履歴書データが見つかりません");
             return null;
         }
 
-        // Entity→DTO変換（英語 → 日本語）
-        ResumeDataEntity entity = entityOpt.get();
+        // Document→DTO変換（英語 → 日本語）
+        ResumeDataDoc entity = entityOpt.get();
         String json = entity.getResumeData();  // ✅ 英語getter
 
         if (json == null || json.isEmpty()) {
@@ -89,15 +93,22 @@ public class ResumeDataService {
         String jsonData = objectMapper.writeValueAsString(resumeData);
         log.debug("JSON長: {} バイト", jsonData.length());
 
-        // 2. Entity取得または新規作成（英語フィールド）
-        ResumeDataEntity entity = resumeDataRepository.findById(talentId)
-                .orElse(new ResumeDataEntity());
+        // 2. Document取得または新規作成（英語フィールド）
+        ResumeDataDoc entity = resumeDataRepository.findById(talentId)
+                .orElse(new ResumeDataDoc());
 
-        // 3. Entityにデータ設定（英語setter使用）
+        // 3. MongoDB は @PrePersist をサポートしていないため、日時を手動設定
+        LocalDateTime now = LocalDateTime.now();
+        if (entity.getCreatedAt() == null) {
+            entity.setCreatedAt(now);
+        }
+        entity.setUpdatedAt(now);
+
+        // 4. Documentにデータ設定（英語setter使用）
         entity.setTalentId(talentId);      // ✅ 英語setter
         entity.setResumeData(jsonData);    // ✅ 英語setter
 
-        // 4. データベースに保存
+        // 5. データベースに保存
         try {
             resumeDataRepository.save(entity);
             log.info("✅ データベース保存成功");

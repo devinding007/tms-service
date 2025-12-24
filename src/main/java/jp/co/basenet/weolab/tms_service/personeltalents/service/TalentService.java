@@ -1,8 +1,8 @@
 package jp.co.basenet.weolab.tms_service.personeltalents.service;
 
 import jp.co.basenet.weolab.tms_service.personeltalents.dto.TalentDTO;
-import jp.co.basenet.weolab.tms_service.personeltalents.entity.Talent;
-import jp.co.basenet.weolab.tms_service.personeltalents.repository.TalentRepository;
+import jp.co.basenet.weolab.tms_service.personeltalents.entity.TalentDoc;
+import jp.co.basenet.weolab.tms_service.personeltalents.repository.TalentdocRepository;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
@@ -15,13 +15,14 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class TalentService {
 
-    private final TalentRepository talentRepository;
+
+    private final TalentdocRepository talentdocRepository;
 
     /**
      * 全人材データ取得
      */
     public List<TalentDTO> getAllTalents() {
-        return talentRepository.findActiveTalents().stream()
+        return talentdocRepository.findActiveTalents().stream()
                 .map(entity -> {
                     TalentDTO dto = new TalentDTO();
                     BeanUtils.copyProperties(entity, dto);
@@ -38,7 +39,7 @@ public class TalentService {
             throw new IllegalArgumentException("IDが指定されていません");
         }
 
-        return talentRepository.findById(id)
+        return talentdocRepository.findById(id)
                 .map(entity -> {
                     TalentDTO dto = new TalentDTO();
                     BeanUtils.copyProperties(entity, dto);
@@ -50,7 +51,7 @@ public class TalentService {
      * 人材データ追加
      */
     public TalentDTO createTalent(TalentDTO dto) {
-        Talent entity = new Talent();
+        TalentDoc entity = new TalentDoc();
 
 
         if (dto.getTalentId() == null || dto.getTalentId().isBlank()) {
@@ -60,7 +61,7 @@ public class TalentService {
         }
         BeanUtils.copyProperties(dto, entity, "talentId"); // DTO → Entity
 
-        Talent saved = talentRepository.save(entity);
+        TalentDoc saved = talentdocRepository.save(entity);
 
         TalentDTO result = new TalentDTO();
         BeanUtils.copyProperties(saved, result); // Entity → DTO
@@ -77,14 +78,14 @@ public class TalentService {
         }
 
         // 指定されたIDのレコードが存在するか確認
-        if (!talentRepository.existsById(dto.getTalentId())) {
+        if (!talentdocRepository.existsById(dto.getTalentId())) {
             throw new RuntimeException("指定されたIDの人材データが見つかりません: " + dto.getTalentId());
         }
 
-        Talent entity = new Talent();
+        TalentDoc entity = new TalentDoc();
         BeanUtils.copyProperties(dto, entity); // DTO → Entity（全フィールドをコピー）
 
-        Talent saved = talentRepository.save(entity); // IDが存在するためUPDATEが実行される
+        TalentDoc saved = talentdocRepository.save(entity); // IDが存在するためUPDATEが実行される
 
         TalentDTO result = new TalentDTO();
         BeanUtils.copyProperties(saved, result); // Entity → DTO
@@ -99,10 +100,28 @@ public class TalentService {
         if (id == null || id.isBlank()) {
             throw new IllegalArgumentException("IDが指定されていません");
         }
-        Talent entity = talentRepository.findById(id)
+        TalentDoc entity = talentdocRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("人材データが見つかりません: " + id));
 
         entity.setDeletedFlag(true);
-        talentRepository.save(entity);
+        talentdocRepository.save(entity);
+    }
+    /**
+     * 複数の人材IDに基づいて人材情報を一括取得
+     *
+     * @param talentIds 人材IDリスト（nullまたは空の場合は空リストを返す）
+     * @return 対応するTalentDTOリスト
+     */
+    public List<TalentDTO> getTalentsByIds(List<String> talentIds) {
+        if (talentIds == null || talentIds.isEmpty()) {
+            return List.of();
+        }
+        return talentdocRepository.findAllById(talentIds).stream()
+                .map(entity -> {
+                    TalentDTO dto = new TalentDTO();
+                    BeanUtils.copyProperties(entity, dto);
+                    return dto;
+                })
+                .toList();
     }
 }
